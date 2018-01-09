@@ -1,34 +1,21 @@
-jPolygon is a javascript library that allows drawing a polygon in a HTML5 canvas over an image.
-It supports undo and clear funcions. To finalize the polygon press **CTRL + mouse Click**.
+paragon is a javascript library that allows drawing a polygon or rectangle in a HTML5 canvas over an image.
+You can Import your base-image, you can draw over a shape and export all in PNG, and download a JSON with the coordinates of the vertices of the figure. You can give a label to each shape (z value)
 
 Technologies used:
 ------------------
 
- - pure javascript (no jQuery, etc...)
+ - pure javascript 
  - HTML5 canvas
-
-Requirements:
--------------
-
- - Any browser that supports HTML5 canvas
 
 Main Features:
 --------------
 
  - Mark points with a square.
- - Undo function implementation.
- - Clear function implementation.
- - When a polygon is created, fill the content with a transparent color.
-
-License:
---------
-
- - MIT license
-
-URL:
-----
-
- - Project sources are hosted on [Github](https://github.com/matteomattei/jPolygon)
- - A live demo is available [here](http://www.matteomattei.com/projects/jpolygon/example.html)
+ - Import base-Image (PNG or JPG)
+ - Export the canvas area in PNG
+ - Download the JSON with the vertices of the shapes
+ - Clear area from the shape
+ - When a polygon is created, fill the content with a 8 transparent color.
+ - When a shape is created, you can choose a label (NAME of the AREA) to give at every single shape
 
 # WebAppCode
