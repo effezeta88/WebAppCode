@@ -1,4 +1,7 @@
-paragon is a javascript library that allows drawing a polygon or rectangle in a HTML5 canvas over an image.
+Paragon.js
+------------------
+
+Paragon is a javascript library that allows drawing a polygon or rectangle in a HTML5 canvas over an image.
 You can Import your base-image, you can draw over a shape and export all in PNG, and download a JSON with the coordinates of the vertices of the figure. You can give a label to each shape (z value)
 
 Technologies used:
