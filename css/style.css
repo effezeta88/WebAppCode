@@ -1,0 +1,40 @@
+.btn_draw{
+	display: inline-block;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin: 15px 15px 15px 15px;
+}
+
+.verticalLine {
+  float:right;
+  border-left: thick solid #ff0000;
+}
+.info_div{
+	float:center;
+	margin-bottom: 10px;
+}
+.in_lin{
+	float:center;
+	display:inline-block;
+	margin-top: 30px;
+	margin-left: 20px;
+}
+#button_div{
+	float:center;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border: 1px solid black;
+}
+#map_image {
+    margin-top: 20px;
+}
+#canv_map {
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+}
+#p01 {
+    font-weight: bold;
+}
