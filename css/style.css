@@ -4,7 +4,24 @@
 	padding-right: 10px;
 	margin: 15px 15px 15px 15px;
 }
+.div_l{
+	float: left;
+	margin-left: 10px;
+	margin-bottom: 40px;
 
+}
+.div_r{
+	float: right;
+	margin-right: 10px;
+	margin-bottom: 40px;
+
+}
+.dim_area{
+    width: 350px;
+    height: 200px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
 .verticalLine {
   float:right;
   border-left: thick solid #ff0000;
@@ -35,6 +52,6 @@
     margin-left: auto;
     margin-right: auto;
 }
-#p01 {
+.p01 {
     font-weight: bold;
 }
