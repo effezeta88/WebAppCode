@@ -10,7 +10,7 @@ var num_fig;
 var drag;
 var rect={};
 var area_name;
-var color=['rgba(255, 0, 0, 0.5)','rgba(0, 255, 0, 0.5)','rgba(0, 0, 255, 0.5)','rgba(255, 255, 0, 0.5)','rgba(255, 0, 255, 0.5)','rgba(0, 255, 255, 0.5)','rgba(255, 255, 255, 0.5)','rgba(247, 191, 190, 0.5)']
+var color=['rgba(255, 0, 0, 0.5)','rgba(0, 255, 0, 0.5)','rgba(0, 0, 255, 0.5)','rgba(255, 255, 0, 0.5)','rgba(255, 0, 255, 0.5)','rgba(0, 255, 255, 0.5)','rgba(255, 255, 255, 0.5)','rgba(247, 191, 190, 0.5)'];
 
 function line_intersects(p0, p1, p2, p3) {
     var s1_x, s1_y, s2_x, s2_y;
@@ -40,6 +40,10 @@ function point(x, y){
 function clear_canvas(){
     ctx = undefined;
     perimeter = new Array();
+    ctx = canvas.getContext("2d");
+    ctx.font = "30px Arial black";
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeText("No map found",10, canvas.height/2);
     complete = false;
     document.getElementById('coordinates').value = '';
     start();
@@ -69,7 +73,7 @@ function draw(end){
 		ctx.fillStyle = color[num_fig-8];
         ctx.fill();
         ctx.strokeStyle = 'blue';
-        complete = true;
+        complete = false;
     }
     ctx.stroke();
 }
@@ -176,34 +180,61 @@ function point_it_rect(event) {
     
 }
 
-function downloadCanvas(link, filename) {
-    link.href = canvas.toDataURL();
-    link.download = filename;
+function save_info() {
+	if(image_name!=""){
+	    	var data = canvas.toDataURL();
+		var name_file = image_name;
+		var today = new Date();
+		var d = today.getDate();
+		var m = today.getMonth()+1;
+		var y = today.getFullYear();
+		var h = today.getHours();
+		var mi = today.getMinutes();
+		var s = today.getSeconds();
+		var name_split = name_file.split(".");
+		var filename = name_split[0]+"_"+y+m+d+"_"+h+mi+s+".png";
+		var filenameJSON = name_split[0]+"_"+y+m+d+"_"+h+mi+s+".json";
+
+		var form_data = new FormData();
+		form_data.append('filenameJSON',filenameJSON);
+		form_data.append('data',data);
+		form_data.append('filename',filename);
+		form_data.append('json',JSON.stringify(obj));
+
+		$.ajax({
+		  type: "POST",
+		  url: "save_Json_Canvas.php",
+		  data: form_data,
+		  dataType:"json",
+		  cache: false,
+		  processData: false,
+    		  contentType: false,
+		  success :function(data){
+		    if(data.error_code==0){
+			 alert("Files saved corretly");
+		    	 //window.location.href = 'index.php';
+		    }
+		    else{
+		    	alert(data.error_msg);
+		    }
+		  },
+		  error: function(data){
+		    alert("Generic Error");
+		  }
+		});
+	}
+	else{
+		alert("Nothing to save");
+	}
 }
 
-
-document.getElementById('download_canvas').addEventListener('click', function() {
-    downloadCanvas(this, 'test.png');
-}, false);
-
-
-  function import_canvas(evt) {
- 	
-    var files = evt.target.files;
-    var output = [];
-
-   for (var i = 0,f;f = files[i]; i++) {
-      output.push(escape(f.name));
-    }
-   image_name=output.join('');
-   if (image_name!=""){
-    	start();
+function setCanvas() {
+   image_name = document.getElementById("list_map").value;
+   if (image_name==null){
+   	image_name="";
    }
-
-  }
-
-  document.getElementById('inp_files').addEventListener('change', import_canvas, false);
-
+   start();
+}
 
 function save_json(){
     var data = encode( JSON.stringify(obj));
@@ -211,15 +242,17 @@ function save_json(){
     var blob = new Blob( [ data ], {
         type: 'application/octet-stream'
     });
-    
+
+    var str="";
+    var res = image_name.split(".");
+    for( var i=0; i<res.length-1;i++){
+        str=str+res[i];
+    }
+    str.replace(".","_");
+    var nam_sav = str+".json";
+
     url = URL.createObjectURL( blob );
-    var link = document.createElement( 'a' );
-    link.setAttribute( 'href', url );
-    link.setAttribute( 'download', 'data.json' );
-    
-    var event = document.createEvent( 'MouseEvents' );
-    event.initMouseEvent( 'click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
-    link.dispatchEvent( event );
+
 
 }
 function active_poly(){
@@ -260,27 +293,51 @@ function assign_area() {
     }
 
 }
+function upload_img(){
+	var link = document.getElementById("id_file").files[0];
+ 	var form_data = new FormData();
+        form_data.append('file', link);
+        form_data.append('newname', link.name);
+		$.ajax({
+		  type: "POST",
+		  url: "upload_pic.php",
+		  data: form_data,
+		  dataType:"json",
+		  cache: false,
+		  processData: false,
+    		  contentType: false,
+		  success :function(data){
+		    if(data.error_code==0){
+			 alert("File uploaded corretly");
+		    	 window.location.href = 'index.php';
+		    }
+		    else{
+		    	alert(data.error_msg);
+		    }
+		  },
+		  error: function(data){
+		    alert("Generic Error");
+		  }
+		});
+}
 
 function start(with_draw) {
     drag = false;
     info.innerHTML="&nbsp";
     canvas.removeEventListener('mousedown', point_it);
-    var img = new Image();
     area_name=num_fig;
     num_fig=0;
     obj=[];
-    if (image_name!=""){	
-    	img.src = PATH_IMG+image_name;
-    	img.onload = function(){
-		canvas.width=img.width;
-		canvas.height=img.height;
-		while(canvas.width>1000 || canvas.height>700){
-			canvas.width=img.width*0.5;
-			canvas.height=img.height*0.5;
-		}
-
-		ctx = canvas.getContext("2d");
-		ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    	}
-   }
+    var img = new Image();
+    img.src = PATH_IMG+image_name;
+    img.onload= function(){
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	canvas.width=img.width;
+	canvas.height=img.height;
+	while(canvas.width>1000 || canvas.height>700){
+		canvas.width=img.width*0.5;
+		canvas.height=img.height*0.5;
+	}
+	ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    }
 }
